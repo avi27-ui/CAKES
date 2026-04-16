@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { galleryImages } from '@/lib/data'
 
 const categories = ['All', 'Wedding', 'Birthday', 'Premium', 'Kids', 'Anniversary', 'Custom']
+const sansFont = { fontFamily: 'var(--font-montserrat), sans-serif' }
+const serifFont = { fontFamily: 'var(--font-playfair), Georgia, serif' }
 
 export function GalleryGrid() {
   const [selectedCategory, setSelectedCategory] = useState('All')
@@ -20,73 +22,62 @@ export function GalleryGrid() {
   const closeLightbox = () => setLightboxImage(null)
 
   const nextImage = () => {
-    if (lightboxImage !== null) {
-      setLightboxImage((lightboxImage + 1) % filteredImages.length)
-    }
+    if (lightboxImage !== null) setLightboxImage((lightboxImage + 1) % filteredImages.length)
   }
-
   const prevImage = () => {
-    if (lightboxImage !== null) {
-      setLightboxImage((lightboxImage - 1 + filteredImages.length) % filteredImages.length)
-    }
+    if (lightboxImage !== null) setLightboxImage((lightboxImage - 1 + filteredImages.length) % filteredImages.length)
   }
 
   return (
-    <section className="py-16 bg-background">
-      <div className="container mx-auto px-6">
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+    <section className="py-20 lg:py-28 bg-noir">
+      <div className="container mx-auto px-6 lg:px-12">
+        {/* Filter */}
+        <div className="flex flex-wrap justify-center gap-2 mb-16">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
               className={cn(
-                'px-5 py-2 text-xs tracking-[0.15em] uppercase transition-all',
+                'px-5 py-2 text-[10px] tracking-[0.3em] uppercase transition-all border',
                 selectedCategory === category
-                  ? 'bg-charcoal text-ivory'
-                  : 'bg-champagne/50 text-charcoal hover:bg-champagne'
+                  ? 'bg-gold text-noir border-gold'
+                  : 'bg-transparent text-cream/60 border-cream/15 hover:border-gold/50 hover:text-cream',
               )}
-              style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+              style={sansFont}
             >
               {category}
             </button>
           ))}
         </div>
 
-        {/* Gallery Grid - Masonry style */}
+        {/* Masonry */}
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
           {filteredImages.map((image, index) => (
             <button
               key={image.id}
               onClick={() => openLightbox(index)}
-              className="group relative w-full overflow-hidden break-inside-avoid card-luxury"
+              className="group relative w-full overflow-hidden break-inside-avoid mb-6"
             >
-              <div className="relative aspect-[4/5]">
+              <div className="relative aspect-[4/5] bg-card overflow-hidden">
                 <Image
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
                 />
-                
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/40 transition-colors duration-500" />
-                
-                {/* Category badge */}
-                <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <span 
-                    className="px-3 py-1 bg-ivory text-charcoal text-[10px] tracking-[0.2em] uppercase"
-                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+                <div className="absolute inset-0 bg-gradient-to-t from-noir/90 via-noir/20 to-noir/30 opacity-70 group-hover:opacity-100 transition-opacity duration-700" />
+
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <span
+                    className="px-3 py-1 bg-noir/60 backdrop-blur-sm text-gold text-[10px] tracking-[0.3em] uppercase border border-gold/30"
+                    style={sansFont}
                   >
                     {image.category}
                   </span>
-                </div>
-
-                {/* View icon */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="w-12 h-12 rounded-full border border-ivory flex items-center justify-center">
-                    <span className="text-ivory text-2xl">+</span>
-                  </div>
+                  <span className="w-12 h-12 border border-cream/30 rounded-full flex items-center justify-center text-cream">
+                    <Plus className="h-4 w-4" />
+                  </span>
                 </div>
               </div>
             </button>
@@ -94,12 +85,9 @@ export function GalleryGrid() {
         </div>
 
         {filteredImages.length === 0 && (
-          <div className="text-center py-20">
-            <p 
-              className="text-xl text-charcoal/60"
-              style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-            >
-              No images found in this category
+          <div className="text-center py-32 border border-cream/10">
+            <p className="text-3xl text-cream/70 italic" style={serifFont}>
+              No archive entries in this category.
             </p>
           </div>
         )}
@@ -107,36 +95,36 @@ export function GalleryGrid() {
 
       {/* Lightbox */}
       {lightboxImage !== null && (
-        <div 
-          className="fixed inset-0 z-50 bg-charcoal/95 flex items-center justify-center"
+        <div
+          className="fixed inset-0 z-[60] bg-noir/97 backdrop-blur-md flex items-center justify-center animate-fade-in"
           onClick={closeLightbox}
         >
-          {/* Close button */}
           <button
             onClick={closeLightbox}
-            className="absolute top-6 right-6 p-2 text-ivory hover:text-gold transition-colors"
+            className="absolute top-6 right-6 p-3 text-cream/70 hover:text-gold transition-colors"
+            aria-label="Close"
           >
-            <X className="h-8 w-8" />
+            <X className="h-6 w-6" />
           </button>
 
-          {/* Navigation */}
           <button
             onClick={(e) => { e.stopPropagation(); prevImage() }}
-            className="absolute left-6 p-2 text-ivory hover:text-gold transition-colors"
+            className="absolute left-4 md:left-8 p-3 text-cream/70 hover:text-gold transition-colors"
+            aria-label="Previous"
           >
             <ChevronLeft className="h-8 w-8" />
           </button>
 
           <button
             onClick={(e) => { e.stopPropagation(); nextImage() }}
-            className="absolute right-6 p-2 text-ivory hover:text-gold transition-colors"
+            className="absolute right-4 md:right-8 p-3 text-cream/70 hover:text-gold transition-colors"
+            aria-label="Next"
           >
             <ChevronRight className="h-8 w-8" />
           </button>
 
-          {/* Image */}
-          <div 
-            className="relative max-w-4xl max-h-[80vh] w-full h-full mx-6"
+          <div
+            className="relative max-w-5xl max-h-[80vh] w-full h-full mx-12"
             onClick={(e) => e.stopPropagation()}
           >
             <Image
@@ -147,14 +135,14 @@ export function GalleryGrid() {
             />
           </div>
 
-          {/* Image counter */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
-            <p 
-              className="text-ivory/70 text-sm"
-              style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-            >
-              {lightboxImage + 1} / {filteredImages.length}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4">
+            <div className="w-12 h-[1px] bg-gold/40" />
+            <p className="text-[10px] tracking-[0.3em] uppercase text-cream/60" style={sansFont}>
+              {String(lightboxImage + 1).padStart(2, '0')}
+              <span className="mx-2 text-cream/30">/</span>
+              {String(filteredImages.length).padStart(2, '0')}
             </p>
+            <div className="w-12 h-[1px] bg-gold/40" />
           </div>
         </div>
       )}

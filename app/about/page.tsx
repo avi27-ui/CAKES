@@ -1,241 +1,210 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Heart, Leaf, Award, Clock } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { StickyOrderButton } from '@/components/sticky-order-button'
+import { PageHeader } from '@/components/page-header'
 import { cn } from '@/lib/utils'
 
 export const metadata = {
-  title: 'Our Story | Zia Cakes',
-  description: 'Discover the story behind Zia Cakes. From home baker to premium artisan bakery, learn about our passion for creating exceptional cakes.',
+  title: 'The Atelier | Zia Cakes',
+  description: 'The story behind Zia Cakes — an intimate artisan patisserie in Virudhachalam founded on the belief that a cake can be quiet, considered, and unforgettable.',
 }
 
-const values = [
+const principles = [
   {
-    icon: Heart,
-    title: 'Crafted with Love',
-    description: 'Every cake begins with passion. We pour our heart into each creation, ensuring it reflects the love and care of handmade artistry.',
+    no: 'I',
+    title: 'Composition',
+    body: 'Each cake begins as a brief. Flavour, texture, silhouette, the light it will stand in — nothing is left to default. We compose, then we bake.',
   },
   {
-    icon: Leaf,
-    title: 'Fresh Ingredients',
-    description: 'We source only the finest, freshest ingredients. No preservatives, no shortcuts—just pure, wholesome goodness in every bite.',
+    no: 'II',
+    title: 'Provenance',
+    body: 'Single-origin chocolate. Madagascan vanilla. Cultured butter. Fruit at its peak. The ingredient list is short on purpose.',
   },
   {
-    icon: Award,
-    title: 'Artisan Quality',
-    description: 'Our cakes are not just desserts; they are edible works of art. Each design is meticulously crafted to exceed expectations.',
+    no: 'III',
+    title: 'Patience',
+    body: 'We accept a maximum of eight orders per day. No cake leaves the atelier until the hand that made it says it is finished.',
   },
   {
-    icon: Clock,
-    title: 'Made to Order',
-    description: 'We believe in freshness. Every cake is baked to order, ensuring you receive a creation at its absolute peak of perfection.',
+    no: 'IV',
+    title: 'Restraint',
+    body: 'A celebration does not need noise. We choose quiet luxury — a single line of gold, one flower, the silhouette doing the work.',
   },
 ]
 
 const milestones = [
-  { year: '2018', title: 'The Beginning', description: 'Started baking from home with a dream and a passion.' },
-  { year: '2020', title: 'Growing Love', description: 'Word spread, and our customer family grew to 100+ happy celebrations.' },
-  { year: '2022', title: 'Premium Launch', description: 'Introduced our premium collection with custom designs.' },
-  { year: '2024', title: '500+ Cakes', description: 'Celebrated 500+ cakes and countless precious moments.' },
+  { year: '2018', title: 'A home kitchen', body: 'Zia began as a single oven and a notebook of recipes kept at night.' },
+  { year: '2020', title: 'First hundred', body: 'One hundred celebrations later, word had traveled quietly across town.' },
+  { year: '2022', title: 'The atelier', body: 'We moved into a dedicated space and began refusing the orders we could not do justice to.' },
+  { year: '2024', title: 'A signature voice', body: 'The signature collection was defined — cakes we can stand behind entirely.' },
+  { year: '2026', title: 'By invitation', body: 'Today, we remain small on purpose. Each cake is still finished by the founder\u2019s hand.' },
 ]
+
+const sansFont = { fontFamily: 'var(--font-montserrat), sans-serif' }
+const serifFont = { fontFamily: 'var(--font-playfair), Georgia, serif' }
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-noir">
       <Header />
-      
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 bg-champagne/20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold/5 rounded-full blur-3xl -z-10" />
-        
-        <div className="container mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Content */}
-            <div className="space-y-8">
-              <div>
-                <p 
-                  className="text-sm tracking-[0.3em] uppercase text-gold mb-4"
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                >
-                  Our Story
-                </p>
-                <h1 
-                  className="text-4xl md:text-5xl lg:text-6xl font-light text-charcoal mb-6"
-                  style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-                >
-                  From Home Kitchen to{' '}
-                  <span className="font-semibold">Artisan Excellence</span>
-                </h1>
-              </div>
-              
-              <div 
-                className="space-y-4 text-charcoal/70 leading-relaxed"
-                style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-              >
-                <p>
-                  Zia Cakes began in 2018 with a simple belief: that every celebration 
-                  deserves a cake crafted with intention, creativity, and love. What 
-                  started as a passion project in a home kitchen has blossomed into 
-                  Virudhachalam&apos;s most cherished artisan bakery.
-                </p>
-                <p>
-                  Today, we continue that same tradition—baking each cake by hand, 
-                  using time-honoured techniques and the finest ingredients. We don&apos;t 
-                  just make cakes; we create centerpieces for your most treasured moments.
-                </p>
-              </div>
+      <PageHeader
+        eyebrow="The Atelier"
+        title="An intimate"
+        accent="patisserie"
+        description="Not a bakery. A workshop of eight cakes a day, composed and finished by a single pair of hands."
+      />
 
-              <Link
-                href="/cakes"
-                className={cn(
-                  'inline-flex items-center gap-3 text-sm tracking-[0.15em] uppercase',
-                  'text-charcoal hover:text-gold transition-colors underline-hover'
-                )}
-                style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-              >
-                Explore Our Creations
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            {/* Image */}
-            <div className="relative">
-              <div className="relative aspect-[4/5] max-w-md mx-auto lg:ml-auto">
-                {/* Decorative frame */}
-                <div className="absolute -inset-4 border border-gold/20 rounded-sm" />
-                
-                <div className="relative w-full h-full bg-champagne/50 overflow-hidden rounded-sm">
+      {/* Founder spread */}
+      <section className="py-24 lg:py-32 bg-noir">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+            {/* Portrait */}
+            <div className="lg:col-span-5 lg:col-start-1 relative">
+              <div className="relative aspect-[4/5] max-w-md mx-auto lg:mx-0">
+                <div className="absolute -inset-6 border border-gold/20" aria-hidden="true" />
+                <div className="relative w-full h-full bg-card overflow-hidden corner-accent">
                   <Image
                     src="/images/about-baker.jpg"
-                    alt="Zia Cakes artisan baker"
+                    alt="Zia, founder and pastry chef, in the atelier"
                     fill
+                    sizes="(min-width: 1024px) 40vw, 80vw"
                     className="object-cover"
+                    priority
                   />
                 </div>
 
-                {/* Badge */}
-                <div className="absolute -bottom-6 -right-6 px-6 py-4 bg-charcoal text-ivory">
-                  <p 
-                    className="text-3xl font-semibold"
-                    style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-                  >
-                    6+
+                {/* Signature plaque */}
+                <div className="absolute -bottom-8 -right-4 lg:-right-8 px-8 py-6 bg-noir border border-gold/30 max-w-[260px]">
+                  <p className="text-[10px] tracking-[0.35em] uppercase text-gold mb-2" style={sansFont}>
+                    Est. 2018
                   </p>
-                  <p 
-                    className="text-xs tracking-[0.2em] uppercase text-gold"
-                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                  >
-                    Years of Love
+                  <p className="text-3xl text-cream italic leading-tight" style={serifFont}>
+                    Eight cakes, a day.
                   </p>
                 </div>
+              </div>
+            </div>
+
+            {/* Letter */}
+            <div className="lg:col-span-6 lg:col-start-7 max-w-xl">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-[1px] bg-gold" />
+                <span className="text-[10px] tracking-[0.4em] uppercase text-gold" style={sansFont}>
+                  From the Founder
+                </span>
+              </div>
+
+              <p className="text-4xl md:text-5xl font-light text-cream leading-[1.1] text-balance mb-8" style={serifFont}>
+                I do not believe a cake <span className="italic text-gradient-bronze">should shout.</span>
+              </p>
+
+              <div className="space-y-6 text-base text-cream/65 leading-[1.9] text-pretty" style={sansFont}>
+                <p>
+                  I started baking at home in 2018 because I could not find the cakes I wanted to eat — the kind where the sponge is the thing, the buttercream is a whisper rather than a declaration, and the surface is almost bare.
+                </p>
+                <p>
+                  Eight years later Zia is still small on purpose. We take a maximum of eight orders a day. Every cake is composed on paper before it is baked, and every cake is finished by my own hand. It is slow. It is unscalable. It is exactly what I want it to be.
+                </p>
+                <p>
+                  If you are considering us for a moment that matters, thank you — I hope we earn it.
+                </p>
+              </div>
+
+              {/* Signature */}
+              <div className="mt-10 pt-8 border-t border-cream/10">
+                <p className="text-4xl text-gradient-bronze italic" style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontWeight: 400 }}>
+                  Zia
+                </p>
+                <p className="text-[10px] tracking-[0.35em] uppercase text-cream/50 mt-2" style={sansFont}>
+                  Founder &amp; Pastry Chef
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Values Section */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-6">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <p 
-              className="text-sm tracking-[0.3em] uppercase text-gold mb-4"
-              style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-            >
-              Our Philosophy
-            </p>
-            <h2 
-              className="text-4xl md:text-5xl font-light text-charcoal"
-              style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-            >
-              What We <span className="font-semibold">Stand For</span>
+      {/* Four Principles */}
+      <section className="py-24 lg:py-32 border-t border-cream/10 bg-card/20">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="text-center mb-20 max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-4 mb-6">
+              <div className="w-12 h-[1px] bg-gold" />
+              <span className="text-[10px] tracking-[0.4em] uppercase text-gold" style={sansFont}>
+                Four Principles
+              </span>
+              <div className="w-12 h-[1px] bg-gold" />
+            </div>
+            <h2 className="text-4xl md:text-5xl font-light text-cream text-balance" style={serifFont}>
+              What we will not{' '}
+              <span className="italic font-semibold text-gradient-bronze">compromise.</span>
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value) => (
-              <div 
-                key={value.title}
-                className="text-center p-8 bg-champagne/20 hover:bg-champagne/40 transition-colors"
+          <div className="grid md:grid-cols-2 gap-px bg-cream/10 border border-cream/10">
+            {principles.map((p) => (
+              <article
+                key={p.no}
+                className="bg-noir p-10 lg:p-14 relative group transition-colors hover:bg-card/40"
               >
-                <div className="w-16 h-16 mx-auto mb-6 rounded-full border border-gold/30 flex items-center justify-center">
-                  <value.icon className="h-7 w-7 text-gold" />
+                <div className="flex items-baseline justify-between mb-8">
+                  <span className="text-6xl font-light text-gold/30 group-hover:text-gold/60 transition-colors" style={serifFont}>
+                    {p.no}
+                  </span>
+                  <div className="w-16 h-[1px] bg-gold/40" />
                 </div>
-                <h3 
-                  className="text-xl font-semibold text-charcoal mb-3"
-                  style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-                >
-                  {value.title}
+                <h3 className="text-3xl font-light text-cream mb-5" style={serifFont}>
+                  {p.title}
                 </h3>
-                <p 
-                  className="text-sm text-charcoal/60"
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                >
-                  {value.description}
+                <p className="text-sm text-cream/55 leading-[1.9] max-w-sm" style={sansFont}>
+                  {p.body}
                 </p>
-              </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Timeline Section */}
-      <section className="py-24 bg-champagne/20">
-        <div className="container mx-auto px-6">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <p 
-              className="text-sm tracking-[0.3em] uppercase text-gold mb-4"
-              style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-            >
-              Our Journey
-            </p>
-            <h2 
-              className="text-4xl md:text-5xl font-light text-charcoal"
-              style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-            >
-              Milestones & <span className="font-semibold">Memories</span>
+      {/* Timeline */}
+      <section className="py-24 lg:py-32 bg-noir">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="text-center mb-20 max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-4 mb-6">
+              <div className="w-12 h-[1px] bg-gold" />
+              <span className="text-[10px] tracking-[0.4em] uppercase text-gold" style={sansFont}>
+                Our Chronicle
+              </span>
+              <div className="w-12 h-[1px] bg-gold" />
+            </div>
+            <h2 className="text-4xl md:text-5xl font-light text-cream text-balance" style={serifFont}>
+              Eight years,{' '}
+              <span className="italic font-semibold text-gradient-bronze">five chapters.</span>
             </h2>
           </div>
 
           <div className="max-w-3xl mx-auto">
-            {milestones.map((milestone, index) => (
-              <div 
-                key={milestone.year}
-                className="flex gap-8 pb-12 last:pb-0"
-              >
-                {/* Year */}
-                <div className="flex-shrink-0 w-20">
-                  <p 
-                    className="text-2xl font-semibold text-gold"
-                    style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-                  >
-                    {milestone.year}
+            {milestones.map((m, i) => (
+              <div key={m.year} className="flex gap-6 lg:gap-10 pb-12 last:pb-0">
+                <div className="flex-shrink-0 w-20 lg:w-24 pt-1">
+                  <p className="text-2xl lg:text-3xl font-light text-gold" style={serifFont}>
+                    {m.year}
                   </p>
                 </div>
-
-                {/* Line */}
-                <div className="flex flex-col items-center">
-                  <div className="w-3 h-3 rounded-full bg-gold" />
-                  {index < milestones.length - 1 && (
-                    <div className="w-[1px] flex-1 bg-gold/30 mt-2" />
+                <div className="flex flex-col items-center pt-2">
+                  <div className="w-2 h-2 rounded-full bg-gold" />
+                  {i < milestones.length - 1 && (
+                    <div className="w-[1px] flex-1 bg-gradient-to-b from-gold/50 to-gold/10 mt-2" />
                   )}
                 </div>
-
-                {/* Content */}
-                <div className="flex-1 pb-8">
-                  <h3 
-                    className="text-xl font-semibold text-charcoal mb-2"
-                    style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-                  >
-                    {milestone.title}
+                <div className="flex-1 pb-4">
+                  <h3 className="text-2xl font-light text-cream mb-2" style={serifFont}>
+                    {m.title}
                   </h3>
-                  <p 
-                    className="text-charcoal/60"
-                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                  >
-                    {milestone.description}
+                  <p className="text-sm text-cream/55 leading-[1.9] max-w-md" style={sansFont}>
+                    {m.body}
                   </p>
                 </div>
               </div>
@@ -244,35 +213,38 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 bg-charcoal text-ivory">
-        <div className="container mx-auto px-6 text-center">
-          <h2 
-            className="text-3xl md:text-4xl font-light mb-6"
-            style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-          >
-            Ready to Create <span className="font-semibold text-gold">Your Moment</span>?
-          </h2>
-          <p 
-            className="text-ivory/70 max-w-md mx-auto mb-8"
-            style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-          >
-            Let us craft the perfect centerpiece for your celebration. 
-            Every cake is made with love, just for you.
-          </p>
-          <Link
-            href="/booking"
-            className={cn(
-              'inline-flex items-center gap-3',
-              'px-8 py-4 text-sm tracking-[0.15em] uppercase',
-              'bg-gold text-charcoal hover:bg-ivory',
-              'transition-all duration-300'
-            )}
-            style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-          >
-            Book Your Cake
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+      {/* CTA */}
+      <section className="relative py-24 lg:py-32 border-t border-cream/10 overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-[0.15] pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(ellipse at center, oklch(0.65 0.14 55 / 0.4) 0%, transparent 70%)',
+          }}
+          aria-hidden="true"
+        />
+        <div className="container mx-auto px-6 lg:px-12 relative z-10">
+          <div className="text-center max-w-2xl mx-auto">
+            <p className="text-[10px] tracking-[0.4em] uppercase text-gold mb-6" style={sansFont}>
+              Reserve
+            </p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-cream leading-[1.1] text-balance mb-10" style={serifFont}>
+              Let us compose a cake for your{' '}
+              <span className="italic font-semibold text-gradient-bronze">moment.</span>
+            </h2>
+            <Link
+              href="/booking"
+              className={cn(
+                'inline-flex items-center gap-4 px-10 py-5',
+                'text-[11px] tracking-[0.35em] uppercase bg-gold text-noir',
+                'hover:bg-gold-light transition-colors',
+              )}
+              style={sansFont}
+            >
+              Begin Reservation
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
 

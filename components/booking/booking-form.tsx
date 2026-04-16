@@ -9,10 +9,20 @@ import { cakes, brandInfo } from '@/lib/data'
 // Simulated blocked dates (would come from CMS in production)
 const blockedDates = ['2026-04-20', '2026-04-25', '2026-05-01']
 
+const sansFont = { fontFamily: 'var(--font-montserrat), sans-serif' }
+const serifFont = { fontFamily: 'var(--font-playfair), Georgia, serif' }
+
+const stepHeading = 'text-2xl md:text-3xl font-light text-cream flex items-center gap-4'
+const labelCls = 'text-[10px] tracking-[0.3em] uppercase text-gold'
+const fieldCls = cn(
+  'w-full bg-transparent border-0 border-b border-cream/20 text-cream py-3 px-0',
+  'focus:outline-none focus:border-gold transition-colors',
+  'placeholder:text-cream/30',
+)
+
 export function BookingForm() {
   const searchParams = useSearchParams()
-  
-  // Form state
+
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [deliveryDate, setDeliveryDate] = useState('')
@@ -23,199 +33,148 @@ export function BookingForm() {
   const [deliveryType, setDeliveryType] = useState<'pickup' | 'delivery'>('pickup')
   const [referenceImage, setReferenceImage] = useState<File | null>(null)
 
-  // Initialize from URL params
   useEffect(() => {
     const cakeId = searchParams.get('cake')
     const flavour = searchParams.get('flavour')
     const weight = searchParams.get('weight')
-
     if (cakeId) setSelectedCakeId(cakeId)
     if (flavour) setSelectedFlavour(flavour)
     if (weight) setSelectedWeight(weight)
   }, [searchParams])
 
   const selectedCake = cakes.find(c => c.id === selectedCakeId)
-
-  // Get available flavours and weights based on selected cake
   const availableFlavours = selectedCake?.flavours || []
   const availableWeights = selectedCake?.weights || []
-
-  // Calculate price
   const selectedWeightObj = availableWeights.find(w => w.kg.toString() === selectedWeight)
   const price = selectedWeightObj?.price || 0
 
-  // Get minimum date (2 days from now)
   const getMinDate = () => {
     const date = new Date()
     date.setDate(date.getDate() + 2)
     return date.toISOString().split('T')[0]
   }
-
-  // Check if date is blocked
   const isDateBlocked = (date: string) => blockedDates.includes(date)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    const message = `*Reservation — Zia Cakes*
 
-    // Build WhatsApp message
-    const message = `*New Cake Order - Zia Cakes*
+*Guest:*
+${name}
+${phone}
 
-*Customer Details:*
-Name: ${name}
-Phone: ${phone}
-
-*Order Details:*
-Cake: ${selectedCake?.name || 'Custom'}
+*Creation:*
+${selectedCake?.name || 'Custom'}
 Flavour: ${selectedFlavour}
-Weight: ${selectedWeight}kg
-Price: ₹${price}
+Size: ${selectedWeight}kg
+Investment: \u20B9${price.toLocaleString('en-IN')}
 
-*Delivery:*
-Type: ${deliveryType === 'pickup' ? 'Pickup' : 'Home Delivery'}
+*Fulfillment:*
+${deliveryType === 'pickup' ? 'Atelier Pickup' : 'Home Delivery'}
 Date: ${deliveryDate}
 
-${customMessage ? `*Special Instructions:*\n${customMessage}` : ''}
-
-${referenceImage ? '*Reference image attached separately*' : ''}
-
-Looking forward to your confirmation!`
+${customMessage ? `*Notes:*\n${customMessage}` : ''}${referenceImage ? '\n\n(Reference image will follow)' : ''}`
 
     const whatsappUrl = `https://wa.me/${brandInfo.whatsapp}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
   }
 
-  const isFormValid = name && phone && deliveryDate && selectedCakeId && selectedFlavour && selectedWeight
+  const isFormValid = name && phone && deliveryDate && selectedCakeId && selectedFlavour && selectedWeight && !isDateBlocked(deliveryDate)
+
+  const stepNumber = (n: number) => (
+    <span className="flex-shrink-0 w-10 h-10 rounded-full border border-gold/60 text-gold text-[10px] tracking-[0.2em] flex items-center justify-center" style={sansFont}>
+      0{n}
+    </span>
+  )
 
   return (
-    <section className="py-16 bg-background">
-      <div className="container mx-auto px-6">
+    <section className="py-20 lg:py-28 bg-noir">
+      <div className="container mx-auto px-6 lg:px-12">
         <div className="max-w-3xl mx-auto">
-          <form onSubmit={handleSubmit} className="space-y-12">
-            {/* Customer Details */}
-            <div className="space-y-6">
-              <h2 
-                className="text-2xl font-semibold text-charcoal flex items-center gap-3"
-                style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-              >
-                <span className="w-8 h-8 bg-gold text-charcoal text-sm flex items-center justify-center">1</span>
+          <form onSubmit={handleSubmit} className="space-y-16">
+            {/* Step 1 */}
+            <div className="space-y-8">
+              <h2 className={stepHeading} style={serifFont}>
+                {stepNumber(1)}
                 Your Details
               </h2>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label 
-                    className="text-sm tracking-wider uppercase text-charcoal/60"
-                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                  >
-                    Full Name *
-                  </label>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                  <label className={labelCls} style={sansFont}>Full Name</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    className={cn(
-                      'w-full px-4 py-3 bg-champagne/30 border-0',
-                      'text-charcoal placeholder:text-charcoal/40',
-                      'focus:outline-none focus:ring-2 focus:ring-gold/50',
-                      'transition-all'
-                    )}
-                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                    placeholder="Enter your name"
+                    className={fieldCls}
+                    style={sansFont}
+                    placeholder="Your name"
                   />
                 </div>
-
-                <div className="space-y-2">
-                  <label 
-                    className="text-sm tracking-wider uppercase text-charcoal/60"
-                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                  >
-                    Phone Number *
-                  </label>
+                <div className="space-y-3">
+                  <label className={labelCls} style={sansFont}>Telephone</label>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     required
-                    className={cn(
-                      'w-full px-4 py-3 bg-champagne/30 border-0',
-                      'text-charcoal placeholder:text-charcoal/40',
-                      'focus:outline-none focus:ring-2 focus:ring-gold/50',
-                      'transition-all'
-                    )}
-                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+                    className={fieldCls}
+                    style={sansFont}
                     placeholder="+91 98765 43210"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Cake Selection */}
-            <div className="space-y-6 pt-6 border-t border-border">
-              <h2 
-                className="text-2xl font-semibold text-charcoal flex items-center gap-3"
-                style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-              >
-                <span className="w-8 h-8 bg-gold text-charcoal text-sm flex items-center justify-center">2</span>
-                Cake Selection
+            {/* Step 2 */}
+            <div className="space-y-8 pt-10 border-t border-cream/10">
+              <h2 className={stepHeading} style={serifFont}>
+                {stepNumber(2)}
+                The Creation
               </h2>
 
-              {/* Cake dropdown */}
-              <div className="space-y-2">
-                <label 
-                  className="text-sm tracking-wider uppercase text-charcoal/60"
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                >
-                  Choose Cake *
-                </label>
-                <select
-                  value={selectedCakeId}
-                  onChange={(e) => {
-                    setSelectedCakeId(e.target.value)
-                    setSelectedFlavour('')
-                    setSelectedWeight('')
-                  }}
-                  required
-                  className={cn(
-                    'w-full px-4 py-3 bg-champagne/30 border-0',
-                    'text-charcoal',
-                    'focus:outline-none focus:ring-2 focus:ring-gold/50',
-                    'transition-all appearance-none cursor-pointer'
-                  )}
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                >
-                  <option value="">Select a cake</option>
-                  {cakes.map((cake) => (
-                    <option key={cake.id} value={cake.id}>
-                      {cake.name} - Starting ₹{cake.weights[0].price}
-                    </option>
-                  ))}
-                </select>
+              <div className="space-y-3">
+                <label className={labelCls} style={sansFont}>Select Cake</label>
+                <div className="relative">
+                  <select
+                    value={selectedCakeId}
+                    onChange={(e) => {
+                      setSelectedCakeId(e.target.value)
+                      setSelectedFlavour('')
+                      setSelectedWeight('')
+                    }}
+                    required
+                    className={cn(fieldCls, 'appearance-none cursor-pointer pr-8')}
+                    style={sansFont}
+                  >
+                    <option value="" className="bg-noir">Choose from the collection</option>
+                    {cakes.map((cake) => (
+                      <option key={cake.id} value={cake.id} className="bg-noir">
+                        {cake.name} &mdash; from &#8377;{cake.weights[0].price.toLocaleString('en-IN')}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
-              {/* Flavour & Weight */}
               {selectedCake && (
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label 
-                      className="text-sm tracking-wider uppercase text-charcoal/60"
-                      style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                    >
-                      Flavour *
-                    </label>
-                    <div className="flex flex-wrap gap-2">
+                <>
+                  <div className="space-y-3">
+                    <label className={labelCls} style={sansFont}>Flavour</label>
+                    <div className="flex flex-wrap gap-2 pt-1">
                       {availableFlavours.map((flavour) => (
                         <button
                           key={flavour}
                           type="button"
                           onClick={() => setSelectedFlavour(flavour)}
                           className={cn(
-                            'flex items-center gap-2 px-4 py-2 text-sm transition-all',
+                            'flex items-center gap-2 px-5 py-3 text-[11px] tracking-[0.2em] uppercase border transition-all',
                             selectedFlavour === flavour
-                              ? 'bg-charcoal text-ivory'
-                              : 'bg-champagne/50 text-charcoal hover:bg-champagne'
+                              ? 'bg-gold text-noir border-gold'
+                              : 'bg-transparent text-cream/70 border-cream/15 hover:border-gold/50 hover:text-cream',
                           )}
-                          style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+                          style={sansFont}
                         >
                           {selectedFlavour === flavour && <Check className="h-3 w-3" />}
                           {flavour}
@@ -224,75 +183,54 @@ Looking forward to your confirmation!`
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label 
-                      className="text-sm tracking-wider uppercase text-charcoal/60"
-                      style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                    >
-                      Weight *
-                    </label>
-                    <div className="flex flex-wrap gap-2">
+                  <div className="space-y-3">
+                    <label className={labelCls} style={sansFont}>Size</label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
                       {availableWeights.map((weight) => (
                         <button
                           key={weight.kg}
                           type="button"
                           onClick={() => setSelectedWeight(weight.kg.toString())}
                           className={cn(
-                            'px-4 py-2 text-sm transition-all',
+                            'py-5 text-center border transition-all',
                             selectedWeight === weight.kg.toString()
-                              ? 'bg-charcoal text-ivory'
-                              : 'bg-champagne/50 text-charcoal hover:bg-champagne'
+                              ? 'bg-gold text-noir border-gold'
+                              : 'bg-transparent text-cream/70 border-cream/15 hover:border-gold/50 hover:text-cream',
                           )}
-                          style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
                         >
-                          {weight.kg}kg - ₹{weight.price}
+                          <span className="block text-xl font-light" style={serifFont}>{weight.kg}kg</span>
+                          <span className="text-[10px] tracking-[0.2em] opacity-70" style={sansFont}>
+                            &#8377;{weight.price.toLocaleString('en-IN')}
+                          </span>
                         </button>
                       ))}
                     </div>
                   </div>
-                </div>
+                </>
               )}
 
-              {/* Price display */}
               {price > 0 && (
-                <div className="p-4 bg-gold/10 border border-gold/30">
-                  <p 
-                    className="text-sm text-charcoal/60"
-                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                  >
-                    Total Price
-                  </p>
-                  <p 
-                    className="text-3xl font-semibold text-charcoal"
-                    style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-                  >
-                    ₹{price}
+                <div className="flex items-baseline justify-between pt-6 border-t border-gold/30">
+                  <p className={labelCls} style={sansFont}>Investment</p>
+                  <p className="text-4xl font-light text-gold" style={serifFont}>
+                    &#8377;{price.toLocaleString('en-IN')}
                   </p>
                 </div>
               )}
             </div>
 
-            {/* Delivery Details */}
-            <div className="space-y-6 pt-6 border-t border-border">
-              <h2 
-                className="text-2xl font-semibold text-charcoal flex items-center gap-3"
-                style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-              >
-                <span className="w-8 h-8 bg-gold text-charcoal text-sm flex items-center justify-center">3</span>
-                Delivery Details
+            {/* Step 3 */}
+            <div className="space-y-8 pt-10 border-t border-cream/10">
+              <h2 className={stepHeading} style={serifFont}>
+                {stepNumber(3)}
+                Fulfillment
               </h2>
 
-              {/* Delivery type */}
-              <div className="space-y-2">
-                <label 
-                  className="text-sm tracking-wider uppercase text-charcoal/60"
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                >
-                  Delivery Type
-                </label>
-                <div className="flex gap-4">
+              <div className="space-y-3">
+                <label className={labelCls} style={sansFont}>Delivery Method</label>
+                <div className="grid grid-cols-2 gap-2 pt-1">
                   {[
-                    { id: 'pickup', label: 'Self Pickup' },
+                    { id: 'pickup', label: 'Atelier Pickup' },
                     { id: 'delivery', label: 'Home Delivery' },
                   ].map((type) => (
                     <button
@@ -300,12 +238,12 @@ Looking forward to your confirmation!`
                       type="button"
                       onClick={() => setDeliveryType(type.id as 'pickup' | 'delivery')}
                       className={cn(
-                        'flex-1 py-3 text-sm transition-all',
+                        'py-4 text-[11px] tracking-[0.25em] uppercase border transition-all',
                         deliveryType === type.id
-                          ? 'bg-charcoal text-ivory'
-                          : 'bg-champagne/50 text-charcoal hover:bg-champagne'
+                          ? 'bg-gold text-noir border-gold'
+                          : 'bg-transparent text-cream/70 border-cream/15 hover:border-gold/50 hover:text-cream',
                       )}
-                      style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+                      style={sansFont}
                     >
                       {type.label}
                     </button>
@@ -313,14 +251,10 @@ Looking forward to your confirmation!`
                 </div>
               </div>
 
-              {/* Date picker */}
-              <div className="space-y-2">
-                <label 
-                  className="text-sm tracking-wider uppercase text-charcoal/60 flex items-center gap-2"
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                >
-                  <Calendar className="h-4 w-4" />
-                  Delivery Date *
+              <div className="space-y-3">
+                <label className={cn(labelCls, 'flex items-center gap-2')} style={sansFont}>
+                  <Calendar className="h-3 w-3" />
+                  Date
                 </label>
                 <input
                   type="date"
@@ -328,125 +262,76 @@ Looking forward to your confirmation!`
                   onChange={(e) => setDeliveryDate(e.target.value)}
                   min={getMinDate()}
                   required
-                  className={cn(
-                    'w-full px-4 py-3 bg-champagne/30 border-0',
-                    'text-charcoal',
-                    'focus:outline-none focus:ring-2 focus:ring-gold/50',
-                    'transition-all'
-                  )}
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+                  className={cn(fieldCls, '[color-scheme:dark]')}
+                  style={sansFont}
                 />
                 {deliveryDate && isDateBlocked(deliveryDate) && (
-                  <p className="flex items-center gap-2 text-sm text-red-600">
-                    <AlertCircle className="h-4 w-4" />
-                    This date is fully booked. Please choose another date.
+                  <p className="flex items-center gap-2 text-xs text-destructive mt-2" style={sansFont}>
+                    <AlertCircle className="h-3.5 w-3.5" />
+                    This date is fully reserved. Please choose another.
                   </p>
                 )}
-                <p 
-                  className="flex items-center gap-2 text-xs text-charcoal/50"
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                >
+                <p className="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-cream/40 mt-2" style={sansFont}>
                   <Clock className="h-3 w-3" />
-                  Please book at least 2 days in advance
+                  Minimum 2 days notice
                 </p>
               </div>
             </div>
 
-            {/* Additional Details */}
-            <div className="space-y-6 pt-6 border-t border-border">
-              <h2 
-                className="text-2xl font-semibold text-charcoal flex items-center gap-3"
-                style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-              >
-                <span className="w-8 h-8 bg-gold text-charcoal text-sm flex items-center justify-center">4</span>
-                Additional Details
+            {/* Step 4 */}
+            <div className="space-y-8 pt-10 border-t border-cream/10">
+              <h2 className={stepHeading} style={serifFont}>
+                {stepNumber(4)}
+                The Detail
               </h2>
 
-              {/* Custom message */}
-              <div className="space-y-2">
-                <label 
-                  className="text-sm tracking-wider uppercase text-charcoal/60"
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                >
-                  Special Instructions (Optional)
-                </label>
+              <div className="space-y-3">
+                <label className={labelCls} style={sansFont}>Notes &amp; preferences</label>
                 <textarea
                   value={customMessage}
                   onChange={(e) => setCustomMessage(e.target.value)}
                   rows={4}
-                  className={cn(
-                    'w-full px-4 py-3 bg-champagne/30 border-0',
-                    'text-charcoal placeholder:text-charcoal/40',
-                    'focus:outline-none focus:ring-2 focus:ring-gold/50',
-                    'transition-all resize-none'
-                  )}
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                  placeholder="Any special message on the cake, design preferences, or allergies we should know about..."
+                  className={cn(fieldCls, 'resize-none')}
+                  style={sansFont}
+                  placeholder="A message for the cake, design preferences, allergies — anything we should know."
                 />
               </div>
 
-              {/* Reference image */}
-              <div className="space-y-2">
-                <label 
-                  className="text-sm tracking-wider uppercase text-charcoal/60"
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                >
-                  Reference Image (Optional)
-                </label>
-                <label
-                  className={cn(
-                    'flex items-center justify-center gap-3 p-8 cursor-pointer',
-                    'border-2 border-dashed border-charcoal/20',
-                    'hover:border-gold transition-colors',
-                    'bg-champagne/20'
-                  )}
-                >
+              <div className="space-y-3">
+                <label className={labelCls} style={sansFont}>Reference Image (optional)</label>
+                <label className="flex items-center justify-center gap-3 p-8 cursor-pointer border border-dashed border-cream/15 hover:border-gold/60 transition-colors bg-card/30">
                   <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => setReferenceImage(e.target.files?.[0] || null)}
                     className="hidden"
                   />
-                  <Upload className="h-5 w-5 text-charcoal/40" />
-                  <span 
-                    className="text-sm text-charcoal/60"
-                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                  >
-                    {referenceImage ? referenceImage.name : 'Click to upload reference image'}
+                  <Upload className="h-4 w-4 text-gold" />
+                  <span className="text-xs tracking-[0.15em] uppercase text-cream/60" style={sansFont}>
+                    {referenceImage ? referenceImage.name : 'Click to upload'}
                   </span>
                 </label>
-                <p 
-                  className="text-xs text-charcoal/50"
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                >
-                  You can share the reference image directly on WhatsApp after submitting
-                </p>
               </div>
             </div>
 
-            {/* Submit Button */}
-            <div className="pt-6 border-t border-border">
+            {/* Submit */}
+            <div className="pt-12 border-t border-cream/10">
               <button
                 type="submit"
-                disabled={!isFormValid || (deliveryDate && isDateBlocked(deliveryDate))}
+                disabled={!isFormValid}
                 className={cn(
-                  'w-full flex items-center justify-center gap-3',
-                  'px-8 py-4 text-sm tracking-[0.15em] uppercase',
-                  'bg-charcoal text-ivory',
-                  'hover:bg-gold hover:text-charcoal',
-                  'transition-all duration-300',
-                  'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-charcoal disabled:hover:text-ivory'
+                  'w-full flex items-center justify-center gap-4 px-10 py-6',
+                  'text-[11px] tracking-[0.35em] uppercase',
+                  'bg-gold text-noir hover:bg-gold-light transition-colors',
+                  'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-gold',
                 )}
-                style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+                style={sansFont}
               >
-                <MessageCircle className="h-5 w-5" />
-                Confirm Order on WhatsApp
+                <MessageCircle className="h-4 w-4" />
+                Send to Atelier
               </button>
-              <p 
-                className="text-center text-xs text-charcoal/50 mt-4"
-                style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-              >
-                You&apos;ll be redirected to WhatsApp to confirm your order directly with us
+              <p className="text-center text-[10px] tracking-[0.25em] uppercase text-cream/40 mt-6" style={sansFont}>
+                You will be taken to WhatsApp to confirm directly with us
               </p>
             </div>
           </form>
