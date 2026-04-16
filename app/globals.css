@@ -477,6 +477,16 @@
   z-index: 1;
 }
 
+/* Hide scrollbars on horizontal carousels */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Decorative corner accents */
 .corner-accent {
   position: relative;

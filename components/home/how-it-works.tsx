@@ -1,118 +1,124 @@
-import { Search, Palette, Calendar, PartyPopper } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const steps = [
   {
-    number: '01',
-    icon: Search,
-    title: 'Browse & Select',
-    description: 'Explore our collection and find the perfect cake for your occasion.',
+    number: 'I',
+    title: 'Curate',
+    description:
+      'Browse the collection or share your vision. Each creation begins with an intimate conversation about your occasion.',
   },
   {
-    number: '02',
-    icon: Palette,
-    title: 'Customise',
-    description: 'Choose your flavour, size, and add any special requests.',
+    number: 'II',
+    title: 'Compose',
+    description:
+      'Select your flavour profile, dimensions, and bespoke details. Our atelier crafts a design proposal just for you.',
   },
   {
-    number: '03',
-    icon: Calendar,
-    title: 'Book & Confirm',
-    description: 'Select your date and confirm your order via WhatsApp.',
+    number: 'III',
+    title: 'Confirm',
+    description:
+      'Reserve your date. A modest deposit secures one of eight daily slots. The remainder settles upon delivery.',
   },
   {
-    number: '04',
-    icon: PartyPopper,
+    number: 'IV',
     title: 'Celebrate',
-    description: 'Receive your handcrafted masterpiece and enjoy the moment.',
+    description:
+      'Your cake arrives ready for its moment — photographed, admired, savoured. An heirloom of taste and memory.',
   },
 ]
 
 export function HowItWorks() {
   return (
-    <section className="py-24 bg-champagne/30 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-      <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+    <section className="py-32 bg-noir relative overflow-hidden">
+      {/* Ambient glow */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] opacity-[0.15] pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse at center top, oklch(0.65 0.14 55 / 0.4) 0%, transparent 70%)',
+        }}
+      />
 
-      <div className="container mx-auto px-6">
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-20">
-          <p 
-            className="text-sm tracking-[0.3em] uppercase text-gold mb-4"
-            style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+      {/* Divider lines */}
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+      <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+
+      <div className="container mx-auto px-6 lg:px-12 relative z-10">
+        {/* Header */}
+        <div className="max-w-2xl mx-auto text-center mb-24">
+          <div className="inline-flex items-center gap-4 mb-8">
+            <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-gold" />
+            <span
+              className="text-[10px] tracking-[0.4em] uppercase text-gold"
+              style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontWeight: 300 }}
+            >
+              The Ritual
+            </span>
+            <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-gold" />
+          </div>
+
+          <h2
+            className="text-4xl md:text-5xl lg:text-6xl font-light text-cream leading-[1.1]"
+            style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
           >
-            The Process
-          </p>
-          <h2 
-            className="text-4xl md:text-5xl font-light text-charcoal mb-6"
-            style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-          >
-            How It <span className="font-semibold">Works</span>
+            Four movements,{' '}
+            <span className="font-semibold italic text-gradient-bronze">one masterpiece</span>
           </h2>
-          <p 
-            className="text-charcoal/60"
-            style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+
+          <p
+            className="text-cream/50 leading-relaxed mt-8 max-w-lg mx-auto"
+            style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontWeight: 300 }}
           >
-            From selection to celebration, we make ordering your dream cake effortless.
+            From the first brief to the final slice, every order follows a considered
+            process — unhurried, personal, and entirely without compromise.
           </p>
         </div>
 
-        {/* Steps */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        {/* Steps — editorial grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-gold/10 border border-gold/10">
           {steps.map((step, index) => (
             <div
               key={step.number}
-              className="relative group"
-            >
-              {/* Connector line */}
-              {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-12 left-full w-full h-[1px] bg-gradient-to-r from-gold/40 to-transparent -z-10" />
+              className={cn(
+                'group relative bg-noir px-8 py-16 lg:py-20',
+                'transition-all duration-700 hover:bg-charcoal'
               )}
-
-              <div className="text-center space-y-6">
-                {/* Number & Icon */}
-                <div className="relative inline-flex items-center justify-center">
-                  {/* Background circle */}
-                  <div className={cn(
-                    'w-24 h-24 rounded-full border border-gold/30',
-                    'flex items-center justify-center',
-                    'group-hover:border-gold transition-colors duration-500',
-                    'bg-ivory'
-                  )}>
-                    <step.icon className="h-8 w-8 text-gold" />
-                  </div>
-                  
-                  {/* Number badge */}
-                  <span 
-                    className={cn(
-                      'absolute -top-2 -right-2 w-8 h-8',
-                      'flex items-center justify-center',
-                      'bg-charcoal text-ivory text-xs',
-                      'rounded-full'
-                    )}
-                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                  >
-                    {step.number}
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div className="space-y-3">
-                  <h3 
-                    className="text-xl font-semibold text-charcoal"
-                    style={{ fontFamily: 'var(--font-cormorant), Georgia, serif' }}
-                  >
-                    {step.title}
-                  </h3>
-                  <p 
-                    className="text-sm text-charcoal/60 max-w-xs mx-auto"
-                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                  >
-                    {step.description}
-                  </p>
-                </div>
+            >
+              {/* Large Roman numeral */}
+              <div className="flex items-baseline gap-4 mb-10">
+                <span
+                  className="text-6xl lg:text-7xl font-light text-gradient-bronze leading-none"
+                  style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+                >
+                  {step.number}
+                </span>
+                <span
+                  className="text-[10px] tracking-[0.3em] uppercase text-cream/30"
+                  style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontWeight: 300 }}
+                >
+                  Step 0{index + 1}
+                </span>
               </div>
+
+              {/* Animated underline */}
+              <div className="w-8 h-[1px] bg-gold mb-8 transition-all duration-700 group-hover:w-20" />
+
+              <h3
+                className="text-2xl lg:text-3xl font-light text-cream mb-5 transition-colors duration-500 group-hover:text-gold"
+                style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+              >
+                {step.title}
+              </h3>
+
+              <p
+                className="text-sm text-cream/50 leading-relaxed"
+                style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontWeight: 300 }}
+              >
+                {step.description}
+              </p>
+
+              {/* Corner accent on hover */}
+              <div className="absolute top-6 right-6 w-4 h-4 border-t border-r border-gold/0 transition-all duration-500 group-hover:border-gold/40" />
             </div>
           ))}
         </div>

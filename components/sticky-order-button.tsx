@@ -17,7 +17,7 @@ export function StickyOrderButton() {
   }, [])
 
   const whatsappUrl = `https://wa.me/${brandInfo.whatsapp}?text=${encodeURIComponent(
-    'Hello! I would like to order a cake from Zia Cakes.'
+    'Hello Zia Patisserie, I would like to enquire about a cake.'
   )}`
 
   return (
@@ -26,25 +26,20 @@ export function StickyOrderButton() {
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        'fixed bottom-6 right-6 z-50',
-        'flex items-center gap-3 px-5 py-3',
-        'bg-charcoal text-ivory shadow-xl',
-        'transition-all duration-500',
-        'hover:bg-gold hover:text-charcoal',
-        'lg:hidden', // Only show on mobile/tablet
+        'fixed bottom-6 right-6 z-50 lg:hidden',
+        'flex items-center gap-3 px-5 py-4',
+        'bg-gold text-charcoal border border-gold',
+        'shadow-[0_20px_40px_-15px_rgba(0,0,0,0.6)]',
+        'transition-all duration-500 hover:bg-gold-light',
         isVisible
           ? 'opacity-100 translate-y-0'
           : 'opacity-0 translate-y-10 pointer-events-none'
       )}
-      aria-label="Order on WhatsApp"
+      aria-label="Enquire on WhatsApp"
+      style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontWeight: 500 }}
     >
-      <MessageCircle className="h-5 w-5" />
-      <span 
-        className="text-sm tracking-wider uppercase"
-        style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-      >
-        Order Now
-      </span>
+      <MessageCircle className="h-4 w-4" />
+      <span className="text-[10px] tracking-[0.25em] uppercase">Enquire</span>
     </a>
   )
 }
